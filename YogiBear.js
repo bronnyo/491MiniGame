@@ -10,6 +10,8 @@ class YogiBear {
         this.y = 0;
         this.speed = 0;
 
+        this.updateBB();
+
         this.animations = [];
         this.loadAnimations();
     };
@@ -34,33 +36,53 @@ class YogiBear {
         // this.animator[3][4] = new animator(ASSET_MANAGER.getAsset("./Yogi.png"))
     };
 
+    updateBB() {
+        this.BB = new BoundingBox(this.x + 20, this.y, PARAMS.TILEWIDTH * 2, PARAMS.TILEHEIGHT * 8);
+    }
+
     update() {
-        this.x += this.speed*this.game.clockTick;
+        
+        const MOVE = 400;
+
+        const TICK = this.game.clockTick;
+
         // horizontal movement
         if(this.game.left && !this.game.right) {
             this.facing = 1;
             this.state = 1;
-            this.x -= 1;
-            console.log("moving left");
+            this.x -= MOVE * TICK;
         } else if(this.game.right && !this.game.left) {
             this.facing = 0;
             this.state = 1;
-            this.x += 1;
+            this.x += MOVE * TICK;
         } else if(this.game.up && !this.game.down) {
             this.state = 1;
-            this.y -= 1;
-            console.log("moving up");
+            this.y -= MOVE * TICK;
         } else if(this.game.down && !this.game.up) {
             this.state = 1;
-            this.y += 1;
-        } else {
-
+            this.y += MOVE * TICK;
         }
-        if(this.x > 1024) this.x = 0
-
+        this.updateBB();
+        
+        //collision
+        var that = this;
+        this.game.entities.forEach(entity => {
+            if(entity.BB && that.BB.collide(entity.BB)) {
+                if(entity instanceof Basket) {
+                    console.log("collided with basket");
+                    that.game.camera.addScore(1);
+                    entity.removeFromWorld = true;
+                }
+            }
+        })
     };
 
     draw(ctx) {
         this.animations[this.facing][this.state].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, PARAMS.SCALE);
+        
+        if(PARAMS.DEBUG) {
+            ctx.strokeStyle = 'Red';
+            ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
+        }
     };
 }

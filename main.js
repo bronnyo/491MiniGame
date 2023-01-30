@@ -3,6 +3,7 @@ const gameEngine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 
 ASSET_MANAGER.queueDownload("./assets/pixelforest.png");
+ASSET_MANAGER.queueDownload("./assets/basket.png");
 ASSET_MANAGER.queueDownload("./assets/Yogi.png");
 
 ASSET_MANAGER.downloadAll(() => {
