@@ -73,6 +73,9 @@ class YogiBear {
                     that.game.camera.addScore(1);
                     entity.removeFromWorld = true;
                 }
+                if(entity instanceof Background) {
+                    console.log("collided with border");
+                }
             }
         })
     };

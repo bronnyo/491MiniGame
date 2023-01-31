@@ -7,6 +7,8 @@ class Background {
 
         this.x = -550;
         this.y = -400;
+
+        this.BB = new BoundingBox(this.x, this.y, 1534, 1534)
     };
     
     update() {
@@ -15,5 +17,10 @@ class Background {
     
     draw(ctx) {
        this.background.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 1);
+
+       if(PARAMS.DEBUG) {
+        ctx.strokeStyle = 'Red';
+        ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
+        }
     };
 }
